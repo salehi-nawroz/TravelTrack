@@ -1,0 +1,88 @@
+{
+  "cities": [
+    {
+      "cityName": "Madrid",
+      "country": "Spain",
+      "countryCode": "ES",
+      "date": "2026-09-07",
+      "notes": "testing 2",
+      "position": {
+        "lat": 40.46635901755316,
+        "lng": -3.7133789062500004
+      },
+      "id": "17806751"
+    },
+    {
+      "cityName": "Berlin",
+      "country": "Germany",
+      "countryCode": "DE",
+      "date": "2027-02-12T09:24:11.863Z",
+      "notes": "Amazing 😃",
+      "position": {
+        "lat": 52.53586782505711,
+        "lng": 13.376933665713324
+      },
+      "id": "98443197"
+    },
+    {
+      "id": "4dc2",
+      "cityName": "Foggaret Ezzaou",
+      "country": "Algeria",
+      "date": "2026-03-13T17:34:03.628Z",
+      "countryCode": "DZ",
+      "notes": "",
+      "position": {
+        "lat": "27.059125784374068",
+        "lng": "3.5156250000000004"
+      }
+    },
+    {
+      "id": "aec3",
+      "cityName": "Taifa",
+      "country": "Morocco",
+      "date": "2026-03-15T18:26:28.868Z",
+      "countryCode": "MA",
+      "notes": "",
+      "position": {
+        "lat": "34.30714385628804",
+        "lng": "-4.086914062500001"
+      }
+    },
+    {
+      "id": "a8e3",
+      "cityName": "Elvas",
+      "country": "Portugal",
+      "date": "2026-03-25T18:08:34.349Z",
+      "countryCode": "PT",
+      "notes": "",
+      "position": {
+        "lat": "38.89103282648846",
+        "lng": "-7.119140625"
+      }
+    },
+    {
+      "id": "5070",
+      "cityName": "Qarah Bagh",
+      "country": "Afghanistan",
+      "date": "2026-09-02T17:45:59.005Z",
+      "countryCode": "AF",
+      "notes": "",
+      "position": {
+        "lat": "33.23868752757414",
+        "lng": "67.89550781250001"
+      }
+    },
+    {
+      "id": "bddf",
+      "cityName": "Markaz al Wahat ad Dakhilah",
+      "country": "Egypt",
+      "date": "2026-09-07",
+      "countryCode": "EG",
+      "notes": "is it",
+      "position": {
+        "lat": "25.57586343593801",
+        "lng": "29.514632286427965"
+      }
+    }
+  ]
+}

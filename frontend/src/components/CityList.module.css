@@ -1,0 +1,117 @@
+.cityList {
+  width: 100%;
+  height: 65vh;
+  list-style: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.cityList::-webkit-scrollbar {
+  width: 0;
+}
+
+.searchContainer {
+  width: 100%;
+  margin-bottom: 1.6rem;
+}
+
+.searchBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.searchBox input {
+  width: 100%;
+  height: 4.4rem;
+  padding: 0.8rem 4rem 0.8rem 4.2rem;
+
+  font-family: inherit;
+  font-size: 1.5rem;
+
+  color: var(--color-dark--1);
+  background-color: var(--color-light--3);
+
+  border: 2px solid transparent;
+  border-radius: 7px;
+
+  outline: none;
+  transition: all 0.2s;
+}
+
+.searchBox input:focus {
+  background-color: #fff;
+  border-color: var(--color-brand--2);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1.4rem;
+
+  font-size: 1.6rem;
+
+  pointer-events: none;
+  z-index: 1;
+}
+
+.clearButton {
+  position: absolute;
+  right: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.6rem;
+  height: 2.6rem;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+  color: var(--color-dark--1);
+
+  font-size: 2.2rem;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clearButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.searchInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 0.7rem;
+  padding: 0 0.4rem;
+
+  color: var(--color-light--1);
+  font-size: 1.2rem;
+}
+
+.clearTextButton {
+  border: none;
+  background: none;
+
+  color: var(--color-brand--2);
+
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.clearTextButton:hover {
+  text-decoration: underline;
+}
