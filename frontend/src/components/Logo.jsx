@@ -4,7 +4,10 @@ import styles from "./Logo.module.css";
 function Logo() {
   return (
     <Link to="/">
-      <img src="/logo.png" alt="TripTrack logo" className={styles.logo} />
+      <span className={styles.logo} aria-label="TravelTrack home">
+        <img src="/icon.png" alt="" className={styles.icon} />
+        <span className={styles.wordmark}>TravelTrack</span>
+      </span>
     </Link>
   );
 }
