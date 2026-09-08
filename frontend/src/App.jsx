@@ -8,7 +8,6 @@ import ProtectRoute from "./pages/ProtectRoute";
 // Components
 import CityList from "./components/CityList";
 import City from "./components/City";
-import EditCity from "./components/EditCity";
 import CountryList from "./components/CountryList";
 import Form from "./components/Form";
 import SpinnerFullPage from "./components/SpinnerFullPage";
@@ -52,8 +51,8 @@ function App() {
                 {/* /app/cities/:id */}
                 <Route path="cities/:id" element={<City />} />
 
-                {/* /app/cities/:id/edit */}
-                <Route path="cities/:id/edit" element={<EditCity />} />
+              {/* /app/cities/:id/edit */}
+              <Route path="cities/:id/edit" element={<Form />} />
 
                 {/* /app/countries */}
                 <Route path="countries" element={<CountryList />} />

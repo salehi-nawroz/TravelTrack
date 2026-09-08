@@ -20,6 +20,43 @@
   justify-content: space-between;
 }
 
+.citySelector {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: inherit;
+  font-size: 1.6rem;
+  text-align: left;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--color-light--3);
+  color: var(--color-dark--1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.citySelector:hover,
+.citySelector:focus-visible {
+  outline: none;
+  background-color: #fff;
+}
+
+.citySelector span:last-child {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.fieldHint {
+  font-size: 1.2rem;
+  color: var(--color-light--1);
+}
+
+:global(.flagBox) {
+  pointer-events: none;
+}
+
 .flag {
   position: absolute;
   right: 1rem;

@@ -1,26 +1,14 @@
 {
   "cities": [
     {
-      "cityName": "Madrid",
-      "country": "Spain",
-      "countryCode": "ES",
-      "date": "2026-09-07",
-      "notes": "testing 2",
-      "position": {
-        "lat": 40.46635901755316,
-        "lng": -3.7133789062500004
-      },
-      "id": "17806751"
-    },
-    {
-      "cityName": "Berlin",
-      "country": "Germany",
-      "countryCode": "DE",
+      "cityName": "Kandahar",
+      "country": "Afghanistan",
+      "countryCode": "AF",
       "date": "2027-02-12T09:24:11.863Z",
       "notes": "Amazing 😃",
       "position": {
-        "lat": 52.53586782505711,
-        "lng": 13.376933665713324
+        "lat": 31.6205738,
+        "lng": 65.7157573
       },
       "id": "98443197"
     },
@@ -62,26 +50,206 @@
     },
     {
       "id": "5070",
-      "cityName": "Qarah Bagh",
-      "country": "Afghanistan",
+      "cityName": "Al Fayyum",
+      "country": "Egypt",
       "date": "2026-09-02T17:45:59.005Z",
-      "countryCode": "AF",
+      "countryCode": "EG",
       "notes": "",
       "position": {
-        "lat": "33.23868752757414",
-        "lng": "67.89550781250001"
+        "lat": "29.401319510041485",
+        "lng": "30.410156250000004"
       }
     },
     {
-      "id": "bddf",
-      "cityName": "Markaz al Wahat ad Dakhilah",
-      "country": "Egypt",
-      "date": "2026-09-07",
-      "countryCode": "EG",
-      "notes": "is it",
+      "id": "6025",
+      "cityName": "Antequera",
+      "country": "Spain",
+      "date": "2026-09-08T16:20:08.628Z",
+      "countryCode": "ES",
+      "notes": "",
       "position": {
-        "lat": "25.57586343593801",
-        "lng": "29.514632286427965"
+        "lat": "37.16031654673677",
+        "lng": "-4.504394531250001"
+      }
+    },
+    {
+      "id": "05d9",
+      "cityName": "Ingleton",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "date": "2026-09-08T16:47:22.940Z",
+      "countryCode": "GB",
+      "notes": "",
+      "position": {
+        "lat": "54.16243396806781",
+        "lng": "-2.4609375000000004"
+      }
+    },
+    {
+      "id": "4657",
+      "cityName": "Kabul",
+      "country": "Afghanistan",
+      "date": "2026-09-08T17:04:37.174Z",
+      "countryCode": "AF",
+      "notes": "tes",
+      "position": {
+        "lat": 34.5269503,
+        "lng": 69.1850584
+      }
+    },
+    {
+      "id": "8c8d",
+      "cityName": "Viitasaari",
+      "country": "Finland",
+      "date": "2026-09-08T17:08:16.913Z",
+      "countryCode": "FI",
+      "notes": "",
+      "position": {
+        "lat": 63.15435519659187,
+        "lng": 25.839843750000004
+      }
+    },
+    {
+      "id": "594d",
+      "cityName": "Midori",
+      "country": "Japan",
+      "date": "2027-02-12T09:24:11.863Z",
+      "countryCode": "JP",
+      "notes": "Amazing 😃",
+      "position": {
+        "lat": 36.50963615733049,
+        "lng": 139.30664062500003
+      }
+    },
+    {
+      "id": "1681",
+      "cityName": "Riyadh",
+      "country": "Saudi Arabia",
+      "date": "2027-02-12T09:24:11.863Z",
+      "countryCode": "SA",
+      "notes": "Amazing 😃",
+      "position": {
+        "lat": 24.547123179730765,
+        "lng": 47.08740234375001
+      }
+    },
+    {
+      "id": "5f93",
+      "cityName": "Ghazni",
+      "country": "Afghanistan",
+      "date": "2026-09-08T18:04:16.089Z",
+      "countryCode": "AF",
+      "notes": "",
+      "position": {
+        "lat": 33.5448968,
+        "lng": 68.4132108
+      }
+    },
+    {
+      "id": "6689",
+      "cityName": "Nord-Aurdal",
+      "country": "Norway",
+      "date": "2026-09-08T18:04:52.553Z",
+      "countryCode": "NO",
+      "notes": "",
+      "position": {
+        "lat": 60.994423108456154,
+        "lng": 9.228515625000002
+      }
+    },
+    {
+      "id": "520e",
+      "cityName": "Mora",
+      "country": "Sweden",
+      "date": "2026-09-08T18:05:15.940Z",
+      "countryCode": "SE",
+      "notes": "",
+      "position": {
+        "lat": 61.10078883158897,
+        "lng": 14.282226562500002
+      }
+    },
+    {
+      "id": "70ce",
+      "cityName": "Casekow",
+      "country": "Germany",
+      "date": "2026-09-08T18:05:18.160Z",
+      "countryCode": "DE",
+      "notes": "",
+      "position": {
+        "lat": 53.25206880589414,
+        "lng": 14.23828125
+      }
+    },
+    {
+      "id": "8688",
+      "cityName": "Varmdo",
+      "country": "Sweden",
+      "date": "2026-09-08T18:05:20.402Z",
+      "countryCode": "SE",
+      "notes": "",
+      "position": {
+        "lat": 59.31076795603884,
+        "lng": 18.764648437500004
+      }
+    },
+    {
+      "id": "22bb",
+      "cityName": "Milejow",
+      "country": "Poland",
+      "date": "2026-09-08T18:05:22.193Z",
+      "countryCode": "PL",
+      "notes": "",
+      "position": {
+        "lat": 51.20688339486562,
+        "lng": 22.895507812500004
+      }
+    },
+    {
+      "id": "a1d8",
+      "cityName": "Kale",
+      "country": "Turkiye",
+      "date": "2026-09-08T18:05:24.163Z",
+      "countryCode": "TR",
+      "notes": "",
+      "position": {
+        "lat": 37.50972584293751,
+        "lng": 28.652343750000004
+      }
+    },
+    {
+      "id": "bfe5",
+      "cityName": "Shalatin",
+      "country": "Egypt",
+      "date": "2026-09-08T18:05:26.548Z",
+      "countryCode": "EG",
+      "notes": "",
+      "position": {
+        "lat": 22.836945920943855,
+        "lng": 34.05761718750001
+      }
+    },
+    {
+      "id": "73c0",
+      "cityName": "Rafha",
+      "country": "Saudi Arabia",
+      "date": "2026-09-08T18:05:54.276Z",
+      "countryCode": "SA",
+      "notes": "",
+      "position": {
+        "lat": 29.84064389983441,
+        "lng": 42.45117187500001
+      }
+    },
+    {
+      "id": "a4a5",
+      "cityName": "Cherekskiy Rayon",
+      "country": "Russian Federation",
+      "date": "2026-09-08T18:06:04.634Z",
+      "countryCode": "RU",
+      "notes": "",
+      "position": {
+        "lat": 42.97250158602597,
+        "lng": 43.33007812500001
       }
     }
   ]

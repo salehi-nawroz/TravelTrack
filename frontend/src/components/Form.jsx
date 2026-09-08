@@ -9,10 +9,11 @@ import Button from "./Button";
 import BackButton from "./BackButton";
 import { useUrlPosition } from "../hooks/useUrlPosition";
 import FlagBox from "./FlagBox";
+import LocationSearch from "./LocationSearch";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useCities } from "../contexts/CitiesContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getCityData } from "../services/geocodingService";
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -24,7 +25,19 @@ export function convertToEmoji(countryCode) {
 
 function Form() {
   const navigate = useNavigate();
-  const { createCity, isLoading } = useCities();
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const isEditMode = Boolean(id);
+  const isSelectingLocation = searchParams.get("selectLocation") === "true";
+  const locationSource = searchParams.get("locationSource");
+  const {
+    createCity,
+    updateCity,
+    getCity,
+    currentCity,
+    isLoading,
+    error,
+  } = useCities();
   const { lat, lng } = useUrlPosition();
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState(false);
 
@@ -33,10 +46,19 @@ function Form() {
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState("");
   const [countryCode, setCountryCode] = useState("");
+  const [position, setPosition] = useState(null);
   const [geocodingError, setGeocodingError] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   void country;
   useEffect(() => {
+    if (isEditMode && !isSelectingLocation) {
+      getCity(id);
+      return;
+    }
+
+    if (locationSource === "search") return;
+
     async function fetchCityData() {
       if (!lat || !lng) return;
 
@@ -44,17 +66,21 @@ function Form() {
         setIsLoadingGeocoding(true);
         setGeocodingError("");
 
-        const data = await getCityData(lat, lng);
+        const location = await getCityData(lat, lng);
 
-        if (data.countryCode === "") {
+        if (!location) {
           throw new Error(
             "This location doesn't seem to be a city. Click somewhere else 🙂",
           );
         }
 
-        setCityName(data.city || data.locality || "");
-        setCountry(data.countryName);
-        setCountryCode(data.countryCode);
+        applyLocation(location);
+
+        if (isEditMode)
+          navigate(
+            `/app/cities/${id}/edit?locationSource=map&lat=${lat}&lng=${lng}`,
+            { replace: true },
+          );
       } catch (error) {
         setGeocodingError(error.message);
       } finally {
@@ -63,43 +89,147 @@ function Form() {
     }
 
     fetchCityData();
-  }, [lat, lng]);
+  }, [
+    getCity,
+    id,
+    isEditMode,
+    isSelectingLocation,
+    lat,
+    lng,
+    locationSource,
+    navigate,
+  ]);
+
+  useEffect(() => {
+    if (!isEditMode || String(currentCity.id) !== String(id)) return;
+
+    setCityName(currentCity.cityName || "");
+    setCountry(currentCity.country || "");
+    setDate(currentCity.date ? new Date(currentCity.date) : null);
+    setNotes(currentCity.notes || "");
+    setCountryCode(currentCity.countryCode || "");
+    setPosition(currentCity.position || null);
+  }, [currentCity, id, isEditMode]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!cityName && !date) return;
-    const newCity = {
+    if (isLoading) return;
+
+    if (!cityName.trim() || !date) {
+      setValidationError("Please provide a city name and visit date.");
+      return;
+    }
+
+    setValidationError("");
+    const city = {
       cityName,
       country,
       date,
       countryCode,
       notes,
-      position: { lat, lng },
+      position: position || { lat, lng },
     };
-    //console.log(newCity);
-    await createCity(newCity);
-    navigate("/app/cities");
+
+    const savedCity = isEditMode
+      ? await updateCity(id, {
+          ...currentCity,
+          ...city,
+        })
+      : await createCity(city);
+
+    if (savedCity)
+      navigate(isEditMode ? `/app/cities/${id}` : "/app/cities");
   }
 
-  if (geocodingError) return <Message message={geocodingError} />;
+  function handleCancel(e) {
+    e.preventDefault();
+    navigate(isEditMode ? `/app/cities/${id}` : -1);
+  }
+
+  function applyLocation(location) {
+    setCityName(location.cityName);
+    setCountry(location.country);
+    setCountryCode(location.countryCode);
+    setPosition(location.position);
+  }
+
+  function handleSelectLocation() {
+    setGeocodingError("");
+    navigate(
+      isEditMode
+        ? `/app/cities/${id}/edit?selectLocation=true`
+        : "/app/form?selectLocation=true",
+    );
+  }
+
+  function handleSearchSelect(location) {
+    applyLocation(location);
+
+    const path = isEditMode ? `/app/cities/${id}/edit` : "/app/form";
+    navigate(
+      `${path}?locationSource=search&lat=${location.position.lat}&lng=${location.position.lng}`,
+      { replace: true },
+    );
+  }
+
+  if (geocodingError && !isEditMode)
+    return <Message message={geocodingError} />;
+  if (isEditMode && error && String(currentCity.id) !== String(id))
+    return <Message message={error} />;
+  if (isEditMode && (isLoading || String(currentCity.id) !== String(id)))
+    return <Spinner />;
   if (isLoadingGeocoding) return <Spinner />;
-  if (!lat && !lng)
+  if (!isEditMode && !lat && !lng)
     return <Message message="Start by clicking somewhere on the map" />;
   return (
     <form
       className={`${styles.form} ${isLoading ? styles.loading : ""}`}
       onSubmit={handleSubmit}
     >
+      <h2>{isEditMode ? "Edit city" : "Add a new city"}</h2>
+
+      {(validationError || error || (isEditMode && geocodingError)) && (
+        <Message message={validationError || error || geocodingError} />
+      )}
+
+      {isSelectingLocation && (
+        <Message message="Click on the map to select a new city." />
+      )}
+
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
-        <input
-          id="cityName"
-          onChange={(e) => setCityName(e.target.value)}
-          value={cityName}
-        />
+        {isEditMode ? (
+          <button
+            id="cityName"
+            type="button"
+            className={styles.citySelector}
+            onClick={handleSelectLocation}
+            aria-describedby="cityNameHelp"
+          >
+            <span>{cityName}</span>
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+        ) : (
+          <input
+            id="cityName"
+            onChange={(e) => setCityName(e.target.value)}
+            value={cityName}
+          />
+        )}
+        {isEditMode && (
+          <span id="cityNameHelp" className={styles.fieldHint}>
+            Select a new city from the map
+          </span>
+        )}
         <FlagBox countryCode={countryCode} country={country} />
         <input type="hidden" id="countryCode" value={countryCode}></input>
       </div>
+
+      <LocationSearch onSelect={handleSearchSelect} />
+
+      <Button type="back" onClick={handleSelectLocation}>
+        Select from map
+      </Button>
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
@@ -121,8 +251,16 @@ function Form() {
       </div>
 
       <div className={styles.buttons}>
-        <Button type="primary">Add</Button>
-        <BackButton />
+        <Button type="primary" disabled={isLoading}>
+          {isEditMode ? "Save changes" : "Add"}
+        </Button>
+        {isEditMode ? (
+          <Button type="back" onClick={handleCancel} disabled={isLoading}>
+            Cancel
+          </Button>
+        ) : (
+          <BackButton />
+        )}
       </div>
     </form>
   );

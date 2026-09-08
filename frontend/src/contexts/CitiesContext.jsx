@@ -29,6 +29,7 @@ function reducer(state, action) {
       return {
         ...state,
         isLoading: true,
+        error: "",
       };
 
     case "cities/loaded":
@@ -115,7 +116,7 @@ function CitiesProvider({ children }) {
   // GET ONE CITY
   const getCity = useCallback(
     async function getCity(id) {
-      if (Number(id) === currentCity.id) return;
+      if (String(id) === String(currentCity.id)) return;
 
       dispatch({ type: "loading" });
 
@@ -147,11 +148,15 @@ function CitiesProvider({ children }) {
         type: "city/created",
         payload: data,
       });
+
+      return data;
     } catch {
       dispatch({
         type: "rejected",
         payload: "There was an error creating the city...",
       });
+
+      return null;
     }
   }
 
@@ -166,11 +171,15 @@ function CitiesProvider({ children }) {
         type: "city/updated",
         payload: data,
       });
+
+      return data;
     } catch {
       dispatch({
         type: "rejected",
         payload: "There was an error updating the city...",
       });
+
+      return null;
     }
   }
 

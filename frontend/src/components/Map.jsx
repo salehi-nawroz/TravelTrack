@@ -9,13 +9,16 @@ import {
 } from "react-leaflet";
 import { useEffect, useState } from "react";
 import { useCities } from "../contexts/CitiesContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useGeolocation } from "../hooks/useGeolocation";
 import Button from "./Button";
 import { useUrlPosition } from "../hooks/useUrlPosition";
 import FlagBox from "./FlagBox";
+import LocationSearch from "./LocationSearch";
 
 function Map() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { cities } = useCities();
   const [mapPosition, setMapPosition] = useState([40, 0]);
   const {
@@ -23,7 +26,18 @@ function Map() {
     position: geolocationPosition,
     getPosition,
   } = useGeolocation();
+  const [searchParams] = useSearchParams();
+  const isSelectingLocation = searchParams.get("selectLocation") === "true";
   const { lat: mapLat, lng: mapLng } = useUrlPosition();
+
+  function handleSearchSelect(selectedLocation) {
+    const path = isSelectingLocation ? location.pathname : "/app/form";
+    const selectionMode = isSelectingLocation ? "selectLocation=true&" : "";
+
+    navigate(
+      `${path}?${selectionMode}locationSource=mapSearch&lat=${selectedLocation.position.lat}&lng=${selectedLocation.position.lng}`,
+    );
+  }
   useEffect(() => {
     if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
   }, [mapLat, mapLng]);
@@ -35,6 +49,7 @@ function Map() {
 
   return (
     <div className={styles.mapContainer}>
+      <LocationSearch onSelect={handleSearchSelect} variant="map" />
       {!geolocationPosition && (
         <Button type="position" onClick={getPosition}>
           {isLoadingPosition ? "loading..." : "Use your position"}
@@ -44,7 +59,7 @@ function Map() {
         center={mapPosition}
         zoom={6}
         scrollWheelZoom={true}
-        className={styles.map}
+        className={`${styles.map} ${isSelectingLocation ? styles.selecting : ""}`}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -64,8 +79,13 @@ function Map() {
             </Popup>
           </Marker>
         ))}
+        {mapLat && mapLng && (
+          <Marker position={[mapLat, mapLng]}>
+            <Popup>Selected location</Popup>
+          </Marker>
+        )}
         <ChangeCenter position={mapPosition} />
-        <DetectClick />
+        <DetectClick isSelectingLocation={isSelectingLocation} />
       </MapContainer>
     </div>
   );
@@ -77,10 +97,19 @@ function ChangeCenter({ position }) {
   return null;
 }
 
-function DetectClick() {
+function DetectClick({ isSelectingLocation }) {
   const navigate = useNavigate();
+  const location = useLocation();
   useMapEvents({
-    click: (e) => navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
+    click: (e) => {
+      const coordinates = `lat=${e.latlng.lat}&lng=${e.latlng.lng}`;
+
+      navigate(
+        isSelectingLocation
+          ? `${location.pathname}?selectLocation=true&${coordinates}`
+          : `form?${coordinates}`,
+      );
+    },
   });
 }
 
