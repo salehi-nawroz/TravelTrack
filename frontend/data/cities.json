@@ -37,18 +37,6 @@
       }
     },
     {
-      "id": "a8e3",
-      "cityName": "Elvas",
-      "country": "Portugal",
-      "date": "2026-03-25T18:08:34.349Z",
-      "countryCode": "PT",
-      "notes": "",
-      "position": {
-        "lat": "38.89103282648846",
-        "lng": "-7.119140625"
-      }
-    },
-    {
       "id": "5070",
       "cityName": "Al Fayyum",
       "country": "Egypt",
@@ -274,6 +262,18 @@
       "position": {
         "lat": 20.014645445341365,
         "lng": 73.99291992187501
+      }
+    },
+    {
+      "id": "1509",
+      "cityName": "Narni",
+      "country": "Italy",
+      "date": "2026-09-10T15:45:11.011Z",
+      "countryCode": "IT",
+      "notes": "",
+      "position": {
+        "lat": 42.50754575468305,
+        "lng": 12.612304687500002
       }
     }
   ]

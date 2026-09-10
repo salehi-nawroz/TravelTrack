@@ -3,6 +3,7 @@ import styles from "./City.module.css";
 import { useParams, Link } from "react-router-dom";
 import { useCities } from "../contexts/CitiesContext";
 import { useEffect } from "react";
+import Button from "./Button";
 import Spinner from "./Spinner";
 import BackButton from "./BackButton";
 import FlagBox from "./FlagBox";
@@ -66,10 +67,10 @@ function City() {
       </div>
 
       <div className={styles.actions}>
-        <BackButton />
-        <Link to="edit" className={styles.editButton}>
-          Edit City
+        <Link to="edit">
+          <Button type="primary">Edit</Button>
         </Link>
+        <BackButton to="/app/cities" />
       </div>
     </div>
   );

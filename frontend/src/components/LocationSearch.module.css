@@ -59,11 +59,32 @@
 .map {
   position: absolute;
   z-index: 1000;
-  top: 2rem;
-  left: 2rem;
-  width: min(32rem, calc(100% - 4rem));
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 25rem;
 }
 
 .map .label {
   color: var(--color-dark--1);
+  display: none;
+}
+
+.map input {
+  width: 70%;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0.6rem;
+  background-color: rgba(255, 255, 255, 0.96);
+  color: var(--color-dark--1);
+  font-size: 1.3rem;
+  font-family: inherit;
+  box-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.map input:focus {
+  border-color: #52c956;
+  box-shadow:
+    0 0 0 2px rgba(139, 213, 141, 0.45),
+    0 0.3rem 1.2rem rgba(0, 0, 0, 0.2);
 }
