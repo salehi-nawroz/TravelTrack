@@ -30,14 +30,8 @@ function Form() {
   const isEditMode = Boolean(id);
   const isSelectingLocation = searchParams.get("selectLocation") === "true";
   const locationSource = searchParams.get("locationSource");
-  const {
-    createCity,
-    updateCity,
-    getCity,
-    currentCity,
-    isLoading,
-    error,
-  } = useCities();
+  const { createCity, updateCity, getCity, currentCity, isLoading, error } =
+    useCities();
   const { lat, lng } = useUrlPosition();
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState(false);
 
@@ -137,8 +131,7 @@ function Form() {
         })
       : await createCity(city);
 
-    if (savedCity)
-      navigate(isEditMode ? `/app/cities/${id}` : "/app/cities");
+    if (savedCity) navigate(isEditMode ? `/app/cities/${id}` : "/app/cities");
   }
 
   function handleCancel(e) {

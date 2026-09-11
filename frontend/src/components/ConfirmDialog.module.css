@@ -1,0 +1,117 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+}
+
+.dialog {
+  width: min(90%, 42rem);
+  padding: 3rem;
+
+  background-color: var(--color-dark--2);
+  border: 1px solid var(--color-dark--3);
+  border-radius: 1rem;
+
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.35);
+
+  text-align: center;
+
+  animation: dialogIn 0.2s ease-out;
+}
+
+.icon {
+  width: 4.5rem;
+  height: 4.5rem;
+
+  margin: 0 auto 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #e03131;
+  border-radius: 50%;
+
+  color: #e03131;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.dialog h2 {
+  margin-bottom: 1rem;
+
+  font-size: 2.2rem;
+  color: var(--color-light--1);
+}
+
+.dialog p {
+  margin-bottom: 0.8rem;
+
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--color-light--2);
+}
+
+.warning {
+  font-size: 1.3rem !important;
+  color: var(--color-light--3) !important;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  margin-top: 2.5rem;
+}
+
+.actions button {
+  min-width: 9rem;
+  padding: 1rem 1.8rem;
+
+  border: none;
+  border-radius: 0.6rem;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
+}
+
+.actions button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.cancel {
+  background-color: var(--color-dark--3);
+  color: var(--color-light--1);
+}
+
+.delete {
+  background-color: #e03131;
+  color: white;
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

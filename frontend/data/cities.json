@@ -1,78 +1,6 @@
 {
   "cities": [
     {
-      "cityName": "Kandahar",
-      "country": "Afghanistan",
-      "countryCode": "AF",
-      "date": "2027-02-12T09:24:11.863Z",
-      "notes": "Amazing 😃",
-      "position": {
-        "lat": 31.6205738,
-        "lng": 65.7157573
-      },
-      "id": "98443197"
-    },
-    {
-      "id": "4dc2",
-      "cityName": "Foggaret Ezzaou",
-      "country": "Algeria",
-      "date": "2026-03-13T17:34:03.628Z",
-      "countryCode": "DZ",
-      "notes": "",
-      "position": {
-        "lat": "27.059125784374068",
-        "lng": "3.5156250000000004"
-      }
-    },
-    {
-      "id": "aec3",
-      "cityName": "Taifa",
-      "country": "Morocco",
-      "date": "2026-03-15T18:26:28.868Z",
-      "countryCode": "MA",
-      "notes": "",
-      "position": {
-        "lat": "34.30714385628804",
-        "lng": "-4.086914062500001"
-      }
-    },
-    {
-      "id": "5070",
-      "cityName": "Al Fayyum",
-      "country": "Egypt",
-      "date": "2026-09-02T17:45:59.005Z",
-      "countryCode": "EG",
-      "notes": "",
-      "position": {
-        "lat": "29.401319510041485",
-        "lng": "30.410156250000004"
-      }
-    },
-    {
-      "id": "6025",
-      "cityName": "Antequera",
-      "country": "Spain",
-      "date": "2026-09-08T16:20:08.628Z",
-      "countryCode": "ES",
-      "notes": "",
-      "position": {
-        "lat": "37.16031654673677",
-        "lng": "-4.504394531250001"
-      }
-    },
-    {
-      "id": "05d9",
-      "cityName": "Ingleton",
-      "country": "United Kingdom of Great Britain and Northern Ireland",
-      "date": "2026-09-08T16:47:22.940Z",
-      "countryCode": "GB",
-      "notes": "",
-      "position": {
-        "lat": "54.16243396806781",
-        "lng": "-2.4609375000000004"
-      }
-    },
-    {
       "id": "4657",
       "cityName": "Kabul",
       "country": "Afghanistan",
@@ -181,18 +109,6 @@
       }
     },
     {
-      "id": "22bb",
-      "cityName": "Milejow",
-      "country": "Poland",
-      "date": "2026-09-08T18:05:22.193Z",
-      "countryCode": "PL",
-      "notes": "",
-      "position": {
-        "lat": 51.20688339486562,
-        "lng": 22.895507812500004
-      }
-    },
-    {
       "id": "a1d8",
       "cityName": "Kale",
       "country": "Turkiye",
@@ -274,6 +190,18 @@
       "position": {
         "lat": 42.50754575468305,
         "lng": 12.612304687500002
+      }
+    },
+    {
+      "id": "322b",
+      "cityName": "Doshi",
+      "country": "Afghanistan",
+      "date": "2026-09-10T23:48:55.662Z",
+      "countryCode": "AF",
+      "notes": "",
+      "position": {
+        "lat": 35.93848750170581,
+        "lng": 68.8573315708504
       }
     }
   ]
