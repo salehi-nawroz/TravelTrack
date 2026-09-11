@@ -3,33 +3,48 @@ import styles from "./CountryList.module.css";
 import CountryItem from "./CountryItem";
 import Message from "./Message";
 import { useCities } from "../contexts/CitiesContext";
+import { getContinent } from "../utils/continent";
+
 function CountryList() {
   const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
+
   if (!cities.length)
     return (
       <Message message="Enter your first Country by clicking on a Country on the map" />
     );
 
-  const countries = cities.reduce((arr, city) => {
-    if (!arr.map((el) => el.country).includes(city.country))
-      return [
-        ...arr,
-        {
-          country: city.country,
-          countryCode: city.countryCode,
-          id: city.id,
-        },
-      ];
-    else return arr;
-  }, []);
+  const countriesByContinent = cities.reduce((acc, city) => {
+    const continent = getContinent(city.countryCode);
+
+    if (!acc[continent]) {
+      acc[continent] = {};
+    }
+
+    if (!acc[continent][city.country]) {
+      acc[continent][city.country] = [];
+    }
+
+    acc[continent][city.country].push(city);
+
+    return acc;
+  }, {});
+
+  console.log(countriesByContinent);
 
   return (
-    <ul className={styles.countryList}>
-      {countries.map((country) => (
-        <CountryItem country={country} key={country.id} />
+    <div className={styles.countryList}>
+      {Object.entries(countriesByContinent).map(([continent, countries]) => (
+        <section key={continent} className={styles.continent}>
+          <h2>{continent}</h2>
+
+          {Object.entries(countries).map(([country, cities]) => (
+            <CountryItem key={country} country={country} cities={cities} />
+          ))}
+        </section>
       ))}
-    </ul>
+    </div>
   );
 }
 

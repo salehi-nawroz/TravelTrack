@@ -263,6 +263,30 @@
         "lat": 39.47444195919312,
         "lng": -99.88769531250001
       }
+    },
+    {
+      "id": "5e52",
+      "cityName": "Bazar-e Yakawlang",
+      "country": "Afghanistan",
+      "date": "2026-09-11T23:12:09.418Z",
+      "countryCode": "AF",
+      "notes": "",
+      "position": {
+        "lat": 34.61921381038867,
+        "lng": 67.23632812500001
+      }
+    },
+    {
+      "id": "72c1",
+      "cityName": "Qalat",
+      "country": "Afghanistan",
+      "date": "2026-09-11T23:12:24.542Z",
+      "countryCode": "AF",
+      "notes": "",
+      "position": {
+        "lat": 32.18661605205294,
+        "lng": 67.00561523437501
+      }
     }
   ]
 }

@@ -43,7 +43,7 @@ function App() {
                 }
               >
                 {/* /app */}
-                <Route index element={<Navigate replace to="cities" />} />
+                <Route index element={<Navigate replace to="countries" />} />
 
                 {/* /app/cities */}
                 <Route path="cities" element={<CityList />} />
@@ -51,8 +51,8 @@ function App() {
                 {/* /app/cities/:id */}
                 <Route path="cities/:id" element={<City />} />
 
-              {/* /app/cities/:id/edit */}
-              <Route path="cities/:id/edit" element={<Form />} />
+                {/* /app/cities/:id/edit */}
+                <Route path="cities/:id/edit" element={<Form />} />
 
                 {/* /app/countries */}
                 <Route path="countries" element={<CountryList />} />
