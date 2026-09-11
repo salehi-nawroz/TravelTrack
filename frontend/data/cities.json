@@ -74,14 +74,14 @@
     },
     {
       "id": "520e",
-      "cityName": "Mora",
-      "country": "Sweden",
+      "cityName": "Tartu linn",
+      "country": "Estonia",
       "date": "2026-09-08T18:05:15.940Z",
-      "countryCode": "SE",
+      "countryCode": "EE",
       "notes": "",
       "position": {
-        "lat": 61.10078883158897,
-        "lng": 14.282226562500002
+        "lat": 58.370197004645874,
+        "lng": 26.78137967066366
       }
     },
     {
@@ -110,14 +110,14 @@
     },
     {
       "id": "a1d8",
-      "cityName": "Kale",
-      "country": "Turkiye",
+      "cityName": "Kharanaq",
+      "country": "Iran",
       "date": "2026-09-08T18:05:24.163Z",
-      "countryCode": "TR",
+      "countryCode": "IR",
       "notes": "",
       "position": {
-        "lat": 37.50972584293751,
-        "lng": 28.652343750000004
+        "lat": 32.69793519140029,
+        "lng": 54.24702129849752
       }
     },
     {
@@ -202,6 +202,66 @@
       "position": {
         "lat": 35.93848750170581,
         "lng": 68.8573315708504
+      }
+    },
+    {
+      "id": "ca2a",
+      "cityName": "Multan Saddar Tehsil",
+      "country": "Pakistan",
+      "date": "2026-09-11T00:35:43.925Z",
+      "countryCode": "PK",
+      "notes": "",
+      "position": {
+        "lat": 30.129343879753467,
+        "lng": 71.29757586116371
+      }
+    },
+    {
+      "id": "f1f4",
+      "cityName": "Navalpino",
+      "country": "Spain",
+      "date": "2026-09-11T00:47:20.354Z",
+      "countryCode": "ES",
+      "notes": "",
+      "position": {
+        "lat": 39.25230581592836,
+        "lng": -4.658203125000001
+      }
+    },
+    {
+      "id": "df08",
+      "cityName": "Dabola",
+      "country": "Guinea",
+      "date": "2026-09-11T00:47:34.621Z",
+      "countryCode": "GN",
+      "notes": "",
+      "position": {
+        "lat": 10.49975422921908,
+        "lng": -10.56884765625
+      }
+    },
+    {
+      "id": "e468",
+      "cityName": "Cabo Verde",
+      "country": "Cabo Verde",
+      "date": "2026-09-11T00:48:05.540Z",
+      "countryCode": "CV",
+      "notes": "",
+      "position": {
+        "lat": 15.646387414834564,
+        "lng": -23.620605468750004
+      }
+    },
+    {
+      "id": "2bed",
+      "cityName": "Township of Indiana",
+      "country": "United States of America",
+      "date": "2026-09-11T00:49:08.796Z",
+      "countryCode": "US",
+      "notes": "",
+      "position": {
+        "lat": 39.47444195919312,
+        "lng": -99.88769531250001
       }
     }
   ]
