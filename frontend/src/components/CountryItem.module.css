@@ -1,35 +1,65 @@
 .countryItem {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0.8rem;
-  background-color: var(--color-dark--2);
-  border-radius: 7px;
+
   padding: 1.2rem 1.5rem;
-  border-left: 5px solid var(--color-brand--1);
+
+  background-color: var(--color-dark--2);
+  border-radius: 0.8rem;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.countryItem:hover {
+  background-color: var(--color-dark--1);
+  transform: translateY(-1px);
+  border: 1px solid var(--color-brand--2);
 }
 
 .countryHeader {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
+
   font-size: 1.7rem;
   font-weight: 600;
+  color: var(--color-light--1);
 }
 
 .cityList {
   list-style: none;
-  margin: 0;
-  padding: 0 0 0 3.5rem;
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  margin: 0;
+  padding: 0 0 0 4rem;
+}
+
+.cityList li {
+  position: relative;
+}
+
+.cityList li::before {
+  content: "•";
+
+  position: absolute;
+  left: -1.3rem;
+
+  color: var(--color-brand--2);
 }
 
 .cityList a {
   color: var(--color-light--2);
   font-size: 1.4rem;
   text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
 .cityList a:hover {
@@ -37,14 +67,20 @@
 }
 
 .moreButton {
-  margin-left: 3.5rem;
+  align-self: flex-start;
+
+  margin-left: 4rem;
+  padding: 0;
+
   border: none;
   background: none;
+
   color: var(--color-brand--2);
+
   font-size: 1.3rem;
   font-weight: 600;
+
   cursor: pointer;
-  padding: 0;
 }
 
 .moreButton:hover {

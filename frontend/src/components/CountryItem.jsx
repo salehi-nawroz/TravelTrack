@@ -15,7 +15,7 @@ function CountryItem({ country, cities }) {
   return (
     <div className={styles.countryItem}>
       <div className={styles.countryHeader}>
-        <FlagBox countryCode={countryCode} country={country} />
+        <FlagBox countryCode={countryCode} country={country} position="left" />
 
         <span>{country}</span>
       </div>

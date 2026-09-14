@@ -136,7 +136,7 @@ function Form() {
 
   function handleCancel(e) {
     e.preventDefault();
-    navigate(isEditMode ? `/app/cities/${id}` : -1);
+    navigate(isEditMode ? `/app/cities/${id}` : "/app/cities");
   }
 
   function applyLocation(location) {

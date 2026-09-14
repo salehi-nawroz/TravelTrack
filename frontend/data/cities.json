@@ -6,7 +6,7 @@
       "country": "Afghanistan",
       "date": "2026-09-08T17:04:37.174Z",
       "countryCode": "AF",
-      "notes": "tes",
+      "notes": "tessdsd",
       "position": {
         "lat": 34.5269503,
         "lng": 69.1850584
@@ -30,7 +30,7 @@
       "country": "Japan",
       "date": "2027-02-12T09:24:11.863Z",
       "countryCode": "JP",
-      "notes": "Amazing 😃",
+      "notes": "Amazing 😃xxcxc",
       "position": {
         "lat": 36.50963615733049,
         "lng": 139.30664062500003
@@ -286,6 +286,30 @@
       "position": {
         "lat": 32.18661605205294,
         "lng": 67.00561523437501
+      }
+    },
+    {
+      "id": "146f",
+      "cityName": "Columbus",
+      "country": "United States of America",
+      "date": "2026-09-11T23:50:59.167Z",
+      "countryCode": "US",
+      "notes": "",
+      "position": {
+        "lat": 39.9622601,
+        "lng": -83.0007065
+      }
+    },
+    {
+      "id": "aca4",
+      "cityName": "Sao Jose do Xingu",
+      "country": "Brazil",
+      "date": "2026-09-12T00:16:40.529Z",
+      "countryCode": "BR",
+      "notes": "",
+      "position": {
+        "lat": -10.549750431937833,
+        "lng": -52.646484375
       }
     }
   ]

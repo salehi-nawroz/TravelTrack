@@ -5,7 +5,7 @@ import { useCities } from "../contexts/CitiesContext";
 import { useEffect } from "react";
 import Button from "./Button";
 import Spinner from "./Spinner";
-import BackButton from "./BackButton";
+//import BackButton from "./BackButton";
 import FlagBox from "./FlagBox";
 
 const formatDate = (date) =>
@@ -34,9 +34,7 @@ function City() {
     <div className={styles.city}>
       <div className={styles.row}>
         <h6>City name</h6>
-        {/* <h3>
-          <img className={styles.flag} src={flag} /> {cityName}
-        </h3> */}
+
         <FlagBox countryCode={countryCode} country={country} position="left">
           {" "}
           <h3 style={{ marginLeft: 5 }}>{cityName}</h3>
@@ -70,7 +68,10 @@ function City() {
         <Link to="edit">
           <Button type="primary">Edit</Button>
         </Link>
-        <BackButton to="/app/cities" />
+
+        <Link to="/app/cities">
+          <Button type="secondary">Go to Cities</Button>
+        </Link>
       </div>
     </div>
   );
