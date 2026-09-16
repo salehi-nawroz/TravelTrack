@@ -51,7 +51,7 @@ function LocationSearch({ onSelect, variant = "form" }) {
       <input
         id={`${variant}-location-search`}
         type="search"
-        placeholder="Search city or country..."
+        placeholder="Search city or country"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
@@ -68,8 +68,13 @@ function LocationSearch({ onSelect, variant = "form" }) {
                 key={`${location.cityName}-${location.country}-${location.position.lat}-${location.position.lng}`}
                 onClick={() => handleSelect(location)}
               >
-                <span>{location.cityName}</span>
-                <small>{location.country}</small>
+                <span>{location.cityName}</span>{" "}
+                <small>
+                  {" "}
+                  {[location.region, location.country]
+                    .filter(Boolean)
+                    .join(", ")}{" "}
+                </small>
               </button>
             ))}
         </div>

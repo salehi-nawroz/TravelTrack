@@ -289,18 +289,6 @@
       }
     },
     {
-      "id": "146f",
-      "cityName": "Columbus",
-      "country": "United States of America",
-      "date": "2026-09-11T23:50:59.167Z",
-      "countryCode": "US",
-      "notes": "",
-      "position": {
-        "lat": 39.9622601,
-        "lng": -83.0007065
-      }
-    },
-    {
       "id": "aca4",
       "cityName": "Sao Jose do Xingu",
       "country": "Brazil",
@@ -310,6 +298,18 @@
       "position": {
         "lat": -10.549750431937833,
         "lng": -52.646484375
+      }
+    },
+    {
+      "id": "ec0c",
+      "cityName": "Township of Bogue",
+      "country": "United States of America",
+      "date": "2026-09-15T23:46:52.783Z",
+      "countryCode": "US",
+      "notes": "",
+      "position": {
+        "lat": 34.2814497,
+        "lng": -78.666593
       }
     }
   ]
