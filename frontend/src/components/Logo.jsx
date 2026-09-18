@@ -5,7 +5,7 @@ function Logo() {
   return (
     <Link to="/">
       <span className={styles.logo} aria-label="TravelTrack home">
-        <img src="/icon.png" alt="" className={styles.icon} />
+        <img src="/icon.svg" alt="" className={styles.icon} />
         <span className={styles.wordmark}>TravelTrack</span>
       </span>
     </Link>

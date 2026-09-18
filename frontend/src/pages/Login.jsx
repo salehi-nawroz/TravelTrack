@@ -21,6 +21,15 @@ export default function Login() {
     setError("");
     try {
       await login(email, password);
+
+      if (window.PasswordCredential) {
+        try {
+          const credential = new window.PasswordCredential(e.target);
+          await navigator.credentials.store(credential);
+        } catch {
+          // Best-effort only; not all browsers support this API.
+        }
+      }
     } catch (err) {
       setError("Invalid email or password.");
     }
@@ -39,6 +48,8 @@ export default function Login() {
           <input
             type="email"
             id="email"
+            name="email"
+            autoComplete="username"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
@@ -49,6 +60,8 @@ export default function Login() {
           <input
             type="password"
             id="password"
+            name="password"
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
