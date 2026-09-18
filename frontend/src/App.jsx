@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 import { CitiesProvider } from "./contexts/CitiesContext";
-import { AuthProvider } from "./contexts/FakeAuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import ProtectRoute from "./pages/ProtectRoute";
 
 // Components

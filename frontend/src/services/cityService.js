@@ -74,9 +74,17 @@ export async function getCity(id) {
 }
 
 export async function createCity(city) {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw new Error(userError.message);
+  if (!user) throw new Error("User is not authenticated.");
+
   const { data, error } = await supabase
     .from("cities")
-    .insert(toDbRow(city))
+    .insert({ ...toDbRow(city), user_id: user.id })
     .select()
     .single();
 

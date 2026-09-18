@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
-import { useAuth } from "../contexts/FakeAuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import styles from "./Login.module.css";
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
@@ -8,15 +8,22 @@ import Button from "../components/Button";
 export default function Login() {
   const { isAuthenticated, login } = useAuth();
 
-  // PRE-FILL FOR DEV PURPOSES
-  const [email, setEmail] = useState("nawroz@example.com");
-  const [password, setPassword] = useState("123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (email && password) login(email, password);
+    if (!email || !password) return;
+
+    setError("");
+    try {
+      await login(email, password);
+    } catch (err) {
+      setError("Invalid email or password.");
+    }
   }
 
   useEffect(() => {
@@ -46,6 +53,8 @@ export default function Login() {
             value={password}
           />
         </div>
+
+        {error && <p style={{ color: "#dc2626" }}>{error}</p>}
 
         <div>
           <Button type="primary">Login</Button>
