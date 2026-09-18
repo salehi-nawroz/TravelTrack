@@ -13,6 +13,7 @@ import {
   updateCity as updateCityApi,
   deleteCity as deleteCityApi,
 } from "../services/cityService";
+import { useAuth } from "../contexts/AuthContext";
 
 const CitiesContext = createContext();
 
@@ -90,8 +91,12 @@ function CitiesProvider({ children }) {
     initialState,
   );
 
+  const { user } = useAuth();
+
   // GET ALL CITIES
   useEffect(() => {
+    if (!user?.id) return;
+
     async function fetchCities() {
       dispatch({ type: "loading" });
 
@@ -111,7 +116,7 @@ function CitiesProvider({ children }) {
     }
 
     fetchCities();
-  }, []);
+  }, [user?.id]);
 
   // GET ONE CITY
   const getCity = useCallback(
