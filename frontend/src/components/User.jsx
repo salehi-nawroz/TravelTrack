@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import styles from "./User.module.css";
 
 function User() {
-  const { user, logout } = useAuth();
+  const { user, profile, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleClick() {
@@ -17,10 +17,12 @@ function User() {
 
   if (!user) return null;
 
+  const displayName = profile?.full_name || user.email;
+
   return (
     <div className={styles.user}>
       <img src="/user.png" alt={user.email} />
-      <span>{user.email}</span>
+      <span>{displayName}</span>
       <button onClick={handleClick}>Logout</button>
     </div>
   );

@@ -1,0 +1,54 @@
+.profile {
+  margin: 2.5rem;
+  padding: 2.5rem 5rem;
+  background-color: var(--color-dark--1);
+  min-height: calc(100vh - 5rem);
+}
+
+.form {
+  background-color: var(--color-dark--2);
+  border-radius: 7px;
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  width: 48rem;
+  margin: 4rem auto;
+}
+
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.avatar {
+  height: 6.4rem;
+  width: 6.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--color-dark--1);
+}
+
+.name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-light--2);
+}
+
+.email {
+  font-size: 1.4rem;
+  color: var(--color-light--1);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}

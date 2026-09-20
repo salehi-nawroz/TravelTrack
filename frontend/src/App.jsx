@@ -19,6 +19,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const AppLayout = lazy(() => import("./pages/AppLayout"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Login = lazy(() => import("./pages/Login"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
   return (
@@ -60,6 +61,16 @@ function App() {
                 {/* /app/form */}
                 <Route path="form" element={<Form />} />
               </Route>
+
+              {/* /app/profile */}
+              <Route
+                path="app/profile"
+                element={
+                  <ProtectRoute>
+                    <Profile />
+                  </ProtectRoute>
+                }
+              />
 
               {/* 404 */}
               <Route path="*" element={<PageNotFound />} />

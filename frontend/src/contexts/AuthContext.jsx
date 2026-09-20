@@ -1,11 +1,16 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import supabase from "../services/supabaseClient";
+import {
+  getProfile,
+  updateProfile as updateProfileApi,
+} from "../services/profileService";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState(null);
 
   useEffect(function () {
     let isMounted = true;
@@ -44,6 +49,34 @@ function AuthProvider({ children }) {
     };
   }, []);
 
+  const userId = user?.id;
+
+  useEffect(
+    function () {
+      let isMounted = true;
+
+      if (!userId) {
+        setProfile(null);
+        return;
+      }
+
+      setProfile(null);
+
+      getProfile()
+        .then((data) => {
+          if (isMounted) setProfile(data);
+        })
+        .catch((error) => {
+          console.error("Failed to load profile:", error.message);
+        });
+
+      return function () {
+        isMounted = false;
+      };
+    },
+    [userId],
+  );
+
   async function login(email, password) {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -57,9 +90,23 @@ function AuthProvider({ children }) {
     if (error) throw error;
   }
 
+  async function updateProfile(updates) {
+    const data = await updateProfileApi(updates);
+    setProfile(data);
+    return data;
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated: !!user, isLoading, login, logout }}
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        profile,
+        login,
+        logout,
+        updateProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
