@@ -11,6 +11,7 @@ import City from "./components/City";
 import CountryList from "./components/CountryList";
 import Form from "./components/Form";
 import SpinnerFullPage from "./components/SpinnerFullPage";
+import Spinner from "./components/Spinner";
 
 // Pages
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -99,7 +100,14 @@ function App() {
                 <Route path="form" element={<Form />} />
 
                 {/* /app/profile */}
-                <Route path="profile" element={<Profile />} />
+                <Route
+                  path="profile"
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <Profile />
+                    </Suspense>
+                  }
+                />
               </Route>
 
               {/* 404 */}
