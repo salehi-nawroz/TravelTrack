@@ -8,7 +8,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useCities } from "../contexts/CitiesContext";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useGeolocation } from "../hooks/useGeolocation";
@@ -97,7 +97,11 @@ function Map() {
 
 function ChangeCenter({ position }) {
   const map = useMap();
-  map.setView(position);
+
+  useLayoutEffect(() => {
+    map.setView(position);
+  }, [map, position]);
+
   return null;
 }
 

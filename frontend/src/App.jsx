@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 
 import { CitiesProvider } from "./contexts/CitiesContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -19,6 +19,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const AppLayout = lazy(() => import("./pages/AppLayout"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
 const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
@@ -29,10 +30,46 @@ function App() {
           <Suspense fallback={<SpinnerFullPage />}>
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<Homepage />} />
-              <Route path="pricing" element={<Pricing />} />
-              <Route path="product" element={<Product />} />
-              <Route path="login" element={<Login />} />
+              <Route
+                path="/"
+                element={
+                  <StrictMode>
+                    <Homepage />
+                  </StrictMode>
+                }
+              />
+              <Route
+                path="pricing"
+                element={
+                  <StrictMode>
+                    <Pricing />
+                  </StrictMode>
+                }
+              />
+              <Route
+                path="product"
+                element={
+                  <StrictMode>
+                    <Product />
+                  </StrictMode>
+                }
+              />
+              <Route
+                path="login"
+                element={
+                  <StrictMode>
+                    <Login />
+                  </StrictMode>
+                }
+              />
+              <Route
+                path="signup"
+                element={
+                  <StrictMode>
+                    <Signup />
+                  </StrictMode>
+                }
+              />
 
               {/* Protected application */}
               <Route
@@ -60,20 +97,20 @@ function App() {
 
                 {/* /app/form */}
                 <Route path="form" element={<Form />} />
+
+                {/* /app/profile */}
+                <Route path="profile" element={<Profile />} />
               </Route>
 
-              {/* /app/profile */}
+              {/* 404 */}
               <Route
-                path="app/profile"
+                path="*"
                 element={
-                  <ProtectRoute>
-                    <Profile />
-                  </ProtectRoute>
+                  <StrictMode>
+                    <PageNotFound />
+                  </StrictMode>
                 }
               />
-
-              {/* 404 */}
-              <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Suspense>
         </BrowserRouter>
