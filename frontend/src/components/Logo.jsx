@@ -3,7 +3,7 @@ import styles from "./Logo.module.css";
 
 function Logo() {
   return (
-    <Link to="/">
+    <Link to="/" className={styles.link}>
       <span className={styles.logo} aria-label="TravelTrack home">
         <img src="/icon.svg" alt="" className={styles.icon} />
         <span className={styles.wordmark}>TravelTrack</span>

@@ -1,3 +1,8 @@
+.link:link,
+.link:visited {
+  text-decoration: none;
+}
+
 .logo {
   display: flex;
   align-items: center;
