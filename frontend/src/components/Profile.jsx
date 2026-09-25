@@ -1,17 +1,43 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import Button from "../components/Button";
-import Spinner from "../components/Spinner";
+import Button from "./Button";
+import Spinner from "./Spinner";
+import ConfirmDialog from "./ConfirmDialog";
 import styles from "./Profile.module.css";
 
 function Profile() {
-  const { user, profile, updateProfile } = useAuth();
+  const {
+    user,
+    profile,
+    updateProfile,
+    avatarUrl,
+    uploadAvatar,
+    removeAvatar,
+    changePassword,
+    deleteAccount,
+  } = useAuth();
   const navigate = useNavigate();
 
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+
+  const [deletePassword, setDeletePassword] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     setFullName(profile?.full_name || "");
@@ -22,9 +48,12 @@ function Profile() {
     if (isSaving) return;
 
     setError("");
+    setSuccessMessage("");
     setIsSaving(true);
     try {
       await updateProfile({ full_name: fullName });
+      setSuccessMessage("Profile updated.");
+      setTimeout(() => navigate("/app"), 1200);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -37,22 +66,133 @@ function Profile() {
     navigate("/app");
   }
 
+  async function handleAvatarChange(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || isUploadingAvatar) return;
+
+    setAvatarError("");
+    setIsUploadingAvatar(true);
+    try {
+      await uploadAvatar(file);
+    } catch (err) {
+      setAvatarError(err.message);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  }
+
+  async function handleRemoveAvatar(e) {
+    e.preventDefault();
+    if (isUploadingAvatar) return;
+
+    setAvatarError("");
+    setIsUploadingAvatar(true);
+    try {
+      await removeAvatar();
+    } catch (err) {
+      setAvatarError(err.message);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  }
+
+  async function handleChangePassword(e) {
+    e.preventDefault();
+    if (isChangingPassword) return;
+
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (newPassword.length < 6) {
+      setPasswordError("New password must be at least 6 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New passwords do not match.");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      setPasswordSuccess("Password updated.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => navigate("/app"), 1200);
+    } catch (err) {
+      setPasswordError(err.message);
+    } finally {
+      setIsChangingPassword(false);
+    }
+  }
+
+  function handleDeleteAccountClick() {
+    setDeleteAccountError("");
+    if (!deletePassword) {
+      setDeleteAccountError("Please enter your password to confirm.");
+      return;
+    }
+    setShowDeleteConfirm(true);
+  }
+
+  async function handleConfirmDeleteAccount() {
+    setShowDeleteConfirm(false);
+    setIsDeletingAccount(true);
+    setDeleteAccountError("");
+    try {
+      await deleteAccount(deletePassword);
+      navigate("/");
+    } catch (err) {
+      setDeleteAccountError(err.message);
+      setIsDeletingAccount(false);
+    }
+  }
+
   if (!user) return null;
 
   const displayName = profile?.full_name || user.email;
 
   return (
-    <main className={styles.profile}>
+    <div className={styles.profile}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2>Your profile</h2>
 
         <div className={styles.avatarRow}>
-          <img src="/user.png" alt={user.email} className={styles.avatar} />
+          <img
+            src={avatarUrl || "/user.png"}
+            alt={user.email}
+            className={styles.avatar}
+          />
           <div>
             <p className={styles.name}>{displayName}</p>
             <p className={styles.email}>{user.email}</p>
+            <div className={styles.avatarActions}>
+              <label className={styles.avatarUpload}>
+                {isUploadingAvatar ? "Uploading..." : "Change photo"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleAvatarChange}
+                  disabled={isUploadingAvatar}
+                  hidden
+                />
+              </label>
+              {avatarUrl && (
+                <Button
+                  type="back"
+                  onClick={handleRemoveAvatar}
+                  disabled={isUploadingAvatar}
+                >
+                  Remove photo
+                </Button>
+              )}
+            </div>
           </div>
         </div>
+
+        {avatarError && <p style={{ color: "#dc2626" }}>{avatarError}</p>}
 
         {!profile ? (
           <Spinner />
@@ -68,17 +208,128 @@ function Profile() {
         )}
 
         {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+        {successMessage && (
+          <p style={{ color: "var(--color-brand--2)" }}>{successMessage}</p>
+        )}
 
         <div className={styles.buttons}>
-          <Button type="primary" disabled={isSaving}>
+          <Button type="primary" disabled={isSaving || !!successMessage}>
             {isSaving ? "Saving..." : "Save"}
           </Button>
-          <Button type="back" onClick={handleCancel} disabled={isSaving}>
+          <Button
+            type="back"
+            onClick={handleCancel}
+            disabled={isSaving || !!successMessage}
+          >
             Cancel
           </Button>
         </div>
       </form>
-    </main>
+
+      {profile?.role === "admin" ? (
+        <div className={styles.form}>
+          <h2>Change password</h2>
+          <p>Contact your super admin for change of password.</p>
+        </div>
+      ) : (
+        <form className={styles.form} onSubmit={handleChangePassword}>
+          <h2>Change password</h2>
+
+          <div className={styles.row}>
+            <label htmlFor="currentPassword">Current password</label>
+            <input
+              type="password"
+              id="currentPassword"
+              autoComplete="current-password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              value={currentPassword}
+            />
+          </div>
+
+          <div className={styles.row}>
+            <label htmlFor="newPassword">New password</label>
+            <input
+              type="password"
+              id="newPassword"
+              autoComplete="new-password"
+              onChange={(e) => setNewPassword(e.target.value)}
+              value={newPassword}
+            />
+          </div>
+
+          <div className={styles.row}>
+            <label htmlFor="confirmPassword">Confirm new password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              autoComplete="new-password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+            />
+          </div>
+
+          {passwordError && (
+            <p style={{ color: "#dc2626" }}>{passwordError}</p>
+          )}
+          {passwordSuccess && (
+            <p style={{ color: "var(--color-brand--2)" }}>{passwordSuccess}</p>
+          )}
+
+          <div className={styles.buttons}>
+            <Button
+              type="primary"
+              disabled={isChangingPassword || !!passwordSuccess}
+            >
+              {isChangingPassword ? "Updating..." : "Update password"}
+            </Button>
+          </div>
+        </form>
+      )}
+
+      <div className={`${styles.form} ${styles.dangerZone}`}>
+        <h2>Danger zone</h2>
+        <p className={styles.dangerText}>
+          Permanently delete your account, including your cities and profile
+          data. This cannot be undone.
+        </p>
+
+        <div className={styles.row}>
+          <label htmlFor="deletePassword">Confirm your password</label>
+          <input
+            type="password"
+            id="deletePassword"
+            autoComplete="current-password"
+            onChange={(e) => setDeletePassword(e.target.value)}
+            value={deletePassword}
+            disabled={isDeletingAccount}
+          />
+        </div>
+
+        {deleteAccountError && (
+          <p style={{ color: "#dc2626" }}>{deleteAccountError}</p>
+        )}
+
+        <div>
+          <Button
+            type="back"
+            onClick={handleDeleteAccountClick}
+            disabled={isDeletingAccount}
+          >
+            {isDeletingAccount ? "Deleting..." : "Delete my account"}
+          </Button>
+        </div>
+      </div>
+
+      {showDeleteConfirm && (
+        <ConfirmDialog
+          title="Delete your account?"
+          message="Are you sure you want to permanently delete your account? All your cities and profile data will be deleted."
+          confirmLabel="Delete account"
+          onConfirm={handleConfirmDeleteAccount}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
+      )}
+    </div>
   );
 }
 

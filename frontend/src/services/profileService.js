@@ -20,6 +20,17 @@ export async function getProfile() {
   return data;
 }
 
+export async function getAllProfiles() {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, role")
+    .order("full_name", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export async function updateProfile({ full_name, avatar_path }) {
   const {
     data: { user },

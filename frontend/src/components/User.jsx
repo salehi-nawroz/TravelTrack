@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "./User.module.css";
 
 function User() {
-  const { user, profile, logout } = useAuth();
+  const { user, profile, avatarUrl, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleClick() {
@@ -21,8 +21,10 @@ function User() {
 
   return (
     <div className={styles.user}>
-      <img src="/user.png" alt={user.email} />
-      <span>{displayName}</span>
+      <Link to="/app/profile" className={styles.identity}>
+        <img src={avatarUrl || "/user.png"} alt={user.email} />
+        <span>{displayName}</span>
+      </Link>
       <button onClick={handleClick}>Logout</button>
     </div>
   );

@@ -7,7 +7,7 @@ import {
 } from "react";
 
 import {
-  getCities,
+  getMyCities,
   getCity as getCityApi,
   createCity as createCityApi,
   updateCity as updateCityApi,
@@ -101,7 +101,7 @@ function CitiesProvider({ children }) {
       dispatch({ type: "loading" });
 
       try {
-        const data = await getCities();
+        const data = await getMyCities();
 
         dispatch({
           type: "cities/loaded",

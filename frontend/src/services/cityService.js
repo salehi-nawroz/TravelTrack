@@ -24,6 +24,7 @@ function localDateToDbDate(date) {
 function toDomainCity(row) {
   return {
     id: row.id,
+    userId: row.user_id,
     cityName: row.city_name,
     country: row.country,
     countryCode: row.country_code,
@@ -54,6 +55,26 @@ export async function getCities() {
   const { data, error } = await supabase
     .from("cities")
     .select("*")
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  return data.map(toDomainCity);
+}
+
+export async function getMyCities() {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw new Error(userError.message);
+  if (!user) throw new Error("User is not authenticated.");
+
+  const { data, error } = await supabase
+    .from("cities")
+    .select("*")
+    .eq("user_id", user.id)
     .order("created_at", { ascending: true });
 
   if (error) throw new Error(error.message);

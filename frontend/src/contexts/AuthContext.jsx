@@ -4,6 +4,12 @@ import {
   getProfile,
   updateProfile as updateProfileApi,
 } from "../services/profileService";
+import {
+  uploadAvatar as uploadAvatarApi,
+  removeAvatar as removeAvatarApi,
+  getAvatarSignedUrl,
+} from "../services/avatarService";
+import { deleteAccount as deleteAccountApi } from "../services/accountService";
 
 const AuthContext = createContext();
 
@@ -11,6 +17,7 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   useEffect(function () {
     let isMounted = true;
@@ -77,6 +84,32 @@ function AuthProvider({ children }) {
     [userId],
   );
 
+  const avatarPath = profile?.avatar_path;
+
+  useEffect(
+    function () {
+      let isMounted = true;
+
+      if (!avatarPath) {
+        setAvatarUrl(null);
+        return;
+      }
+
+      getAvatarSignedUrl(avatarPath)
+        .then((url) => {
+          if (isMounted) setAvatarUrl(url);
+        })
+        .catch((error) => {
+          console.error("Failed to load avatar:", error.message);
+        });
+
+      return function () {
+        isMounted = false;
+      };
+    },
+    [avatarPath],
+  );
+
   async function login(email, password) {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -85,14 +118,90 @@ function AuthProvider({ children }) {
     if (error) throw error;
   }
 
+  async function signup(fullName, email, password) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName },
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
+    });
+    if (error) throw error;
+    return data;
+  }
+
   async function logout() {
     const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  }
+
+  async function changePassword(currentPassword, newPassword) {
+    if (profile?.role === "admin") {
+      throw new Error("Contact your super admin for change of password.");
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (signInError) throw new Error("Current password is incorrect.");
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
     if (error) throw error;
   }
 
   async function updateProfile(updates) {
     const data = await updateProfileApi(updates);
     setProfile(data);
+    return data;
+  }
+
+  async function uploadAvatar(file) {
+    const previousPath = profile?.avatar_path;
+
+    const path = await uploadAvatarApi(file);
+    const data = await updateProfileApi({ avatar_path: path });
+    setProfile(data);
+
+    if (previousPath && previousPath !== path) {
+      try {
+        await removeAvatarApi(previousPath);
+      } catch (error) {
+        console.error("Failed to remove previous avatar:", error.message);
+      }
+    }
+
+    return data;
+  }
+
+  async function deleteAccount(currentPassword) {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (signInError) throw new Error("Current password is incorrect.");
+
+    await deleteAccountApi();
+    await supabase.auth.signOut();
+  }
+
+  async function removeAvatar() {
+    const previousPath = profile?.avatar_path;
+
+    const data = await updateProfileApi({ avatar_path: null });
+    setProfile(data);
+
+    if (previousPath) {
+      try {
+        await removeAvatarApi(previousPath);
+      } catch (error) {
+        console.error("Failed to remove avatar file:", error.message);
+      }
+    }
+
     return data;
   }
 
@@ -103,9 +212,17 @@ function AuthProvider({ children }) {
         isAuthenticated: !!user,
         isLoading,
         profile,
+        isAdmin: profile?.role === "admin",
+        isSuperAdmin: profile?.role === "super_admin",
+        avatarUrl,
         login,
+        signup,
         logout,
+        changePassword,
         updateProfile,
+        uploadAvatar,
+        removeAvatar,
+        deleteAccount,
       }}
     >
       {children}

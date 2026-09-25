@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "./Login.module.css";
@@ -72,6 +72,10 @@ export default function Login() {
         <div>
           <Button type="primary">Login</Button>
         </div>
+
+        <p className={styles.switch}>
+          Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </form>
     </main>
   );

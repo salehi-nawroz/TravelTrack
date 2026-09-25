@@ -21,7 +21,8 @@ const AppLayout = lazy(() => import("./pages/AppLayout"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
-const Profile = lazy(() => import("./pages/Profile"));
+const Profile = lazy(() => import("./components/Profile"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 function App() {
   return (
@@ -105,6 +106,16 @@ function App() {
                   element={
                     <Suspense fallback={<Spinner />}>
                       <Profile />
+                    </Suspense>
+                  }
+                />
+
+                {/* /app/admin */}
+                <Route
+                  path="admin"
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <Admin />
                     </Suspense>
                   }
                 />

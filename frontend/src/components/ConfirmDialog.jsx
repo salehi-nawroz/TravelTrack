@@ -1,7 +1,14 @@
 import { useEffect } from "react";
 import styles from "./ConfirmDialog.module.css";
 
-function ConfirmDialog({ cityName, onConfirm, onCancel }) {
+function ConfirmDialog({
+  title = "Delete city?",
+  message,
+  cityName,
+  confirmLabel = "Delete",
+  onConfirm,
+  onCancel,
+}) {
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") {
@@ -27,10 +34,14 @@ function ConfirmDialog({ cityName, onConfirm, onCancel }) {
       >
         <div className={styles.icon}>!</div>
 
-        <h2 id="dialog-title">Delete city?</h2>
+        <h2 id="dialog-title">{title}</h2>
 
         <p>
-          Are you sure you want to delete <strong>{cityName}</strong>?
+          {message ?? (
+            <>
+              Are you sure you want to delete <strong>{cityName}</strong>?
+            </>
+          )}
         </p>
 
         <p className={styles.warning}>This action cannot be undone.</p>
@@ -41,7 +52,7 @@ function ConfirmDialog({ cityName, onConfirm, onCancel }) {
           </button>
 
           <button className={styles.delete} onClick={onConfirm}>
-            Delete
+            {confirmLabel}
           </button>
         </div>
       </div>

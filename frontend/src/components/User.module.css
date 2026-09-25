@@ -20,6 +20,14 @@
   height: 4rem;
 }
 
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+
 .user button {
   background-color: var(--color-dark--2);
   border-radius: 7px;
