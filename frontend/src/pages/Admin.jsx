@@ -1,13 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getAllProfiles } from "../services/profileService";
 import { getCities, deleteCity as deleteCityApi } from "../services/cityService";
+import { getContinent } from "../utils/continent";
 import Spinner from "../components/Spinner";
 import Message from "../components/Message";
 import ConfirmDialog from "../components/ConfirmDialog";
 import FlagBox from "../components/FlagBox";
 import styles from "./Admin.module.css";
+
+const SORT_OPTIONS = [
+  { value: "default", label: "Default" },
+  { value: "cityNameAsc", label: "City name A-Z" },
+  { value: "cityNameDesc", label: "City name Z-A" },
+  { value: "countryAsc", label: "Country A-Z" },
+  { value: "countryDesc", label: "Country Z-A" },
+  { value: "visitDateNewest", label: "Visit date newest first" },
+  { value: "visitDateOldest", label: "Visit date oldest first" },
+  { value: "createdNewest", label: "Created date newest first" },
+  { value: "createdOldest", label: "Created date oldest first" },
+];
+
+// Compares two dates safely, treating missing/invalid values as "oldest" so
+// they sort last regardless of direction, rather than breaking the sort.
+function compareDates(a, b) {
+  const timeA = a ? new Date(a).getTime() : NaN;
+  const timeB = b ? new Date(b).getTime() : NaN;
+  const validA = !Number.isNaN(timeA);
+  const validB = !Number.isNaN(timeB);
+
+  if (!validA && !validB) return 0;
+  if (!validA) return 1;
+  if (!validB) return -1;
+
+  return timeA - timeB;
+}
 
 const ROLE_LABELS = {
   user: "User",
@@ -37,6 +65,12 @@ function Admin() {
   const [deleteError, setDeleteError] = useState("");
 
   const [activeTab, setActiveTab] = useState("users");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCountry, setFilterCountry] = useState("");
+  const [filterContinent, setFilterContinent] = useState("");
+  const [filterUserId, setFilterUserId] = useState("");
+  const [sortOption, setSortOption] = useState("default");
 
   // Users and cities are fetched independently so that one failing doesn't
   // prevent the other section from loading and displaying normally.
@@ -92,8 +126,6 @@ function Admin() {
     };
   }, []);
 
-  if (!isAdmin && !isSuperAdmin) return <Navigate replace to="/app" />;
-
   const nameById = Object.fromEntries(
     profiles.map((profile) => [profile.id, profile.full_name]),
   );
@@ -101,7 +133,139 @@ function Admin() {
     profiles.map((profile) => [profile.id, profile.role]),
   );
 
-  const citiesByUserId = cities.reduce((acc, city) => {
+  const countryOptions = useMemo(
+    () =>
+      [...new Set(cities.map((city) => city.country))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [cities],
+  );
+
+  const continentOptions = useMemo(
+    () =>
+      [...new Set(cities.map((city) => getContinent(city.countryCode)))].sort(
+        (a, b) => a.localeCompare(b),
+      ),
+    [cities],
+  );
+
+  const userOptions = useMemo(() => {
+    const seenUserIds = new Set();
+    const options = [];
+
+    cities.forEach((city) => {
+      if (seenUserIds.has(city.userId)) return;
+      seenUserIds.add(city.userId);
+      options.push({
+        id: city.userId,
+        name: nameById[city.userId] || "Unknown user",
+      });
+    });
+
+    return options.sort((a, b) => a.name.localeCompare(b.name));
+  }, [cities, nameById]);
+
+  const hasActiveControls = Boolean(
+    searchQuery.trim() ||
+      filterCountry ||
+      filterContinent ||
+      filterUserId ||
+      sortOption !== "default",
+  );
+
+  // Pipeline: raw cities -> search -> country filter -> continent filter ->
+  // user filter -> sort. The existing user/country grouping below then
+  // consumes this derived array instead of the raw `cities` state, which is
+  // never mutated.
+  const processedCities = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    let result = cities.filter((city) => {
+      if (!query) return true;
+
+      const continent = getContinent(city.countryCode);
+      const userName = nameById[city.userId] || "";
+
+      return [city.cityName, city.country, continent, userName].some(
+        (field) => field.toLowerCase().includes(query),
+      );
+    });
+
+    if (filterCountry) {
+      result = result.filter((city) => city.country === filterCountry);
+    }
+
+    if (filterContinent) {
+      result = result.filter(
+        (city) => getContinent(city.countryCode) === filterContinent,
+      );
+    }
+
+    if (filterUserId) {
+      result = result.filter((city) => city.userId === filterUserId);
+    }
+
+    return [...result].sort((a, b) => {
+      switch (sortOption) {
+        case "cityNameAsc":
+          return a.cityName.localeCompare(b.cityName);
+        case "cityNameDesc":
+          return b.cityName.localeCompare(a.cityName);
+        case "countryAsc":
+          return (
+            a.country.localeCompare(b.country) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        case "countryDesc":
+          return (
+            b.country.localeCompare(a.country) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        case "visitDateNewest":
+          return (
+            compareDates(b.date, a.date) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        case "visitDateOldest":
+          return (
+            compareDates(a.date, b.date) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        case "createdNewest":
+          return (
+            compareDates(b.createdAt, a.createdAt) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        case "createdOldest":
+          return (
+            compareDates(a.createdAt, b.createdAt) ||
+            a.cityName.localeCompare(b.cityName)
+          );
+        default:
+          return 0;
+      }
+    });
+  }, [
+    cities,
+    searchQuery,
+    filterCountry,
+    filterContinent,
+    filterUserId,
+    sortOption,
+    nameById,
+  ]);
+
+  function handleClearFilters() {
+    setSearchQuery("");
+    setFilterCountry("");
+    setFilterContinent("");
+    setFilterUserId("");
+    setSortOption("default");
+  }
+
+  if (!isAdmin && !isSuperAdmin) return <Navigate replace to="/app" />;
+
+  const citiesByUserId = processedCities.reduce((acc, city) => {
     (acc[city.userId] ??= []).push(city);
     return acc;
   }, {});
@@ -198,71 +362,195 @@ function Admin() {
           ) : !cities.length ? (
             <Message message="No cities found." />
           ) : (
-            <ul className={styles.userGroups}>
-              {userIdsWithCities.map((userId) => {
-                const userCities = citiesByUserId[userId];
-                const countries = groupByCountry(userCities);
-                const role = roleById[userId];
+            <>
+              <div className={styles.toolbar}>
+                <div className={styles.toolbarField}>
+                  <label htmlFor="adminCitySearch" className={styles.toolbarLabel}>
+                    Search
+                  </label>
+                  <input
+                    id="adminCitySearch"
+                    type="text"
+                    className={styles.toolbarInput}
+                    placeholder="Search cities, countries, continents, or users..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
 
-                return (
-                  <li key={userId} className={styles.userGroup}>
-                    <div className={styles.userGroupHeading}>
-                      <span>{nameById[userId] || "Unknown user"}</span>
-                      {role && (
-                        <span
-                          className={`${styles.role} ${styles[`role-${role}`] || ""}`}
-                        >
-                          {ROLE_LABELS[role] || role}
-                        </span>
-                      )}
-                    </div>
+                <div className={styles.toolbarField}>
+                  <label htmlFor="adminCountryFilter" className={styles.toolbarLabel}>
+                    Country
+                  </label>
+                  <select
+                    id="adminCountryFilter"
+                    className={styles.toolbarSelect}
+                    value={filterCountry}
+                    onChange={(e) => setFilterCountry(e.target.value)}
+                  >
+                    <option value="">All Countries</option>
+                    {countryOptions.map((country) => (
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                    {Object.entries(countries).map(
-                      ([country, countryCities]) => (
-                        <div key={country} className={styles.countryItem}>
-                          <div className={styles.countryHeader}>
-                            <FlagBox
-                              countryCode={countryCities[0]?.countryCode}
-                              country={country}
-                              position="left"
-                            />
-                            <span>{country}</span>
-                          </div>
+                <div className={styles.toolbarField}>
+                  <label htmlFor="adminContinentFilter" className={styles.toolbarLabel}>
+                    Continent
+                  </label>
+                  <select
+                    id="adminContinentFilter"
+                    className={styles.toolbarSelect}
+                    value={filterContinent}
+                    onChange={(e) => setFilterContinent(e.target.value)}
+                  >
+                    <option value="">All Continents</option>
+                    {continentOptions.map((continent) => (
+                      <option key={continent} value={continent}>
+                        {continent}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                          <ul className={styles.cityList}>
-                            {countryCities.map((city) => (
-                              <li key={city.id} className={styles.cityRow}>
-                                <Link
-                                  to={`/app/cities/${city.id}?lat=${city.position.lat}&lng=${city.position.lng}`}
-                                >
-                                  {city.cityName}
-                                </Link>
-                                <span className={styles.actions}>
-                                  <Link to={`/app/cities/${city.id}/edit`}>
-                                    Edit
-                                  </Link>
-                                  {isSuperAdmin && (
-                                    <button
-                                      className={styles.deleteBtn}
-                                      onClick={() =>
-                                        setCityPendingDelete(city)
-                                      }
-                                      aria-label={`Delete ${city.cityName}`}
-                                    >
-                                      &times;
-                                    </button>
-                                  )}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
+                <div className={styles.toolbarField}>
+                  <label htmlFor="adminUserFilter" className={styles.toolbarLabel}>
+                    User
+                  </label>
+                  <select
+                    id="adminUserFilter"
+                    className={styles.toolbarSelect}
+                    value={filterUserId}
+                    onChange={(e) => setFilterUserId(e.target.value)}
+                  >
+                    <option value="">All Users</option>
+                    {userOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.toolbarField}>
+                  <label htmlFor="adminCitySort" className={styles.toolbarLabel}>
+                    Sort
+                  </label>
+                  <select
+                    id="adminCitySort"
+                    className={styles.toolbarSelect}
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.toolbarResult}>
+                  <span className={styles.toolbarCount}>
+                    {hasActiveControls
+                      ? `${processedCities.length} of ${cities.length} cities`
+                      : `${cities.length} cities`}
+                  </span>
+
+                  {hasActiveControls && (
+                    <button
+                      type="button"
+                      className={styles.toolbarClear}
+                      onClick={handleClearFilters}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {!processedCities.length ? (
+                <div className={styles.filteredEmpty}>
+                  <Message message="No cities match your filters." />
+                  <button
+                    type="button"
+                    className={styles.toolbarClear}
+                    onClick={handleClearFilters}
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : (
+                <ul className={styles.userGroups}>
+                  {userIdsWithCities.map((userId) => {
+                    const userCities = citiesByUserId[userId];
+                    const countries = groupByCountry(userCities);
+                    const role = roleById[userId];
+
+                    return (
+                      <li key={userId} className={styles.userGroup}>
+                        <div className={styles.userGroupHeading}>
+                          <span>{nameById[userId] || "Unknown user"}</span>
+                          {role && (
+                            <span
+                              className={`${styles.role} ${styles[`role-${role}`] || ""}`}
+                            >
+                              {ROLE_LABELS[role] || role}
+                            </span>
+                          )}
                         </div>
-                      ),
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+
+                        {Object.entries(countries).map(
+                          ([country, countryCities]) => (
+                            <div key={country} className={styles.countryItem}>
+                              <div className={styles.countryHeader}>
+                                <FlagBox
+                                  countryCode={countryCities[0]?.countryCode}
+                                  country={country}
+                                  position="left"
+                                />
+                                <span>{country}</span>
+                              </div>
+
+                              <ul className={styles.cityList}>
+                                {countryCities.map((city) => (
+                                  <li key={city.id} className={styles.cityRow}>
+                                    <Link
+                                      to={`/app/cities/${city.id}?lat=${city.position.lat}&lng=${city.position.lng}`}
+                                    >
+                                      {city.cityName}
+                                    </Link>
+                                    <span className={styles.actions}>
+                                      <Link to={`/app/cities/${city.id}/edit`}>
+                                        Edit
+                                      </Link>
+                                      {isSuperAdmin && (
+                                        <button
+                                          className={styles.deleteBtn}
+                                          onClick={() =>
+                                            setCityPendingDelete(city)
+                                          }
+                                          aria-label={`Delete ${city.cityName}`}
+                                        >
+                                          &times;
+                                        </button>
+                                      )}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ),
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </>
           )}
         </div>
       )}

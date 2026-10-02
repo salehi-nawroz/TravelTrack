@@ -31,6 +31,7 @@ function toDomainCity(row) {
     date: dbDateToLocalDate(row.visit_date),
     notes: row.notes,
     region: row.region ?? null,
+    createdAt: row.created_at,
     position: {
       lat: row.latitude,
       lng: row.longitude,
