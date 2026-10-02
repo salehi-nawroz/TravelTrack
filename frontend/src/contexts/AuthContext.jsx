@@ -154,6 +154,10 @@ function AuthProvider({ children }) {
   }
 
   async function updateProfile(updates) {
+    if (profile?.role === "admin" && "full_name" in updates) {
+      throw new Error("Contact your super admin for change of name.");
+    }
+
     const data = await updateProfileApi(updates);
     setProfile(data);
     return data;

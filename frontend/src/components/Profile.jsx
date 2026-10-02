@@ -153,6 +153,7 @@ function Profile() {
   if (!user) return null;
 
   const displayName = profile?.full_name || user.email;
+  const isAdmin = profile?.role === "admin";
 
   return (
     <div className={styles.profile}>
@@ -205,7 +206,9 @@ function Profile() {
               id="fullName"
               onChange={(e) => setFullName(e.target.value)}
               value={fullName}
+              disabled={isAdmin}
             />
+            {isAdmin && <p>Contact your super admin for change of name.</p>}
           </div>
         )}
 
@@ -215,7 +218,10 @@ function Profile() {
         )}
 
         <div className={styles.buttons}>
-          <Button type="primary" disabled={isSaving || !!successMessage}>
+          <Button
+            type="primary"
+            disabled={isSaving || !!successMessage || isAdmin}
+          >
             {isSaving ? "Saving..." : "Save"}
           </Button>
           <Button
