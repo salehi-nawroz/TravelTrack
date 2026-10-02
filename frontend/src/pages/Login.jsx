@@ -67,7 +67,7 @@ export default function Login() {
           />
         </div>
 
-        {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+        {error && <p style={{ color: "var(--color-danger)" }}>{error}</p>}
 
         <div>
           <Button type="primary">Login</Button>

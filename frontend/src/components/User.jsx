@@ -25,7 +25,9 @@ function User() {
         <img src={avatarUrl || "/user.png"} alt={user.email} />
         <span>{displayName}</span>
       </Link>
-      <button onClick={handleClick}>Logout</button>
+      <button className={styles.logoutBtn} onClick={handleClick}>
+        Logout
+      </button>
     </div>
   );
 }

@@ -21,6 +21,12 @@
   border: 1px solid currentColor;
 }
 
+.danger {
+  font-weight: 700;
+  background-color: var(--color-danger);
+  color: #fff;
+}
+
 .position {
   font-weight: 700;
   position: absolute;

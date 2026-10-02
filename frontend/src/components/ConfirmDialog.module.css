@@ -36,10 +36,10 @@
   align-items: center;
   justify-content: center;
 
-  border: 2px solid #e03131;
+  border: 2px solid var(--color-danger);
   border-radius: 50%;
 
-  color: #e03131;
+  color: var(--color-danger);
   font-size: 2.5rem;
   font-weight: 800;
 }
@@ -70,38 +70,6 @@
   gap: 1rem;
 
   margin-top: 2.5rem;
-}
-
-.actions button {
-  min-width: 9rem;
-  padding: 1rem 1.8rem;
-
-  border: none;
-  border-radius: 0.6rem;
-
-  font-size: 1.4rem;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.15s,
-    opacity 0.15s;
-}
-
-.actions button:hover {
-  transform: translateY(-1px);
-  opacity: 0.9;
-}
-
-.cancel {
-  background-color: var(--color-dark--3);
-  color: var(--color-light--1);
-}
-
-.delete {
-  background-color: #e03131;
-  color: white;
 }
 
 @keyframes dialogIn {

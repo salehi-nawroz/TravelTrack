@@ -70,7 +70,7 @@ function City() {
         </Link>
 
         <Link to="/app/cities">
-          <Button type="secondary">Go to Cities</Button>
+          <Button type="back">Close</Button>
         </Link>
       </div>
     </div>

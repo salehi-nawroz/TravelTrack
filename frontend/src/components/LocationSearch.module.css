@@ -61,7 +61,11 @@
   z-index: 1000;
   top: 1.5rem;
   left: 1.5rem;
-  width: 25rem;
+  width: clamp(15rem, 22vw, 24rem);
+  /* Leaves clearance on the right (sidebar width + app padding + a
+     reserved gap for the User/profile widget pinned to the top-right of
+     this same area) so the box never grows underneath it. */
+  max-width: min(calc(100% - 3rem), calc(100vw - 93rem));
 }
 
 .map .label {
@@ -70,13 +74,13 @@
 }
 
 .map input {
-  width: 70%;
-  padding: 0.9rem 1.2rem;
+  width: 100%;
+  padding: clamp(0.6rem, 0.4rem + 0.5vw, 0.9rem) 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 0.6rem;
   background-color: rgba(255, 255, 255, 0.96);
   color: var(--color-dark--1);
-  font-size: 1.3rem;
+  font-size: clamp(1.2rem, 1rem + 0.3vw, 1.4rem);
   font-family: inherit;
   box-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.2);
   outline: none;

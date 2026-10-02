@@ -192,7 +192,9 @@ function Profile() {
           </div>
         </div>
 
-        {avatarError && <p style={{ color: "#dc2626" }}>{avatarError}</p>}
+        {avatarError && (
+          <p style={{ color: "var(--color-danger)" }}>{avatarError}</p>
+        )}
 
         {!profile ? (
           <Spinner />
@@ -207,7 +209,7 @@ function Profile() {
           </div>
         )}
 
-        {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+        {error && <p style={{ color: "var(--color-danger)" }}>{error}</p>}
         {successMessage && (
           <p style={{ color: "var(--color-brand--2)" }}>{successMessage}</p>
         )}
@@ -269,7 +271,7 @@ function Profile() {
           </div>
 
           {passwordError && (
-            <p style={{ color: "#dc2626" }}>{passwordError}</p>
+            <p style={{ color: "var(--color-danger)" }}>{passwordError}</p>
           )}
           {passwordSuccess && (
             <p style={{ color: "var(--color-brand--2)" }}>{passwordSuccess}</p>
@@ -306,7 +308,7 @@ function Profile() {
         </div>
 
         {deleteAccountError && (
-          <p style={{ color: "#dc2626" }}>{deleteAccountError}</p>
+          <p style={{ color: "var(--color-danger)" }}>{deleteAccountError}</p>
         )}
 
         <div>

@@ -28,7 +28,7 @@
   text-decoration: none;
 }
 
-.user button {
+.logoutBtn {
   background-color: var(--color-dark--2);
   border-radius: 7px;
   border: none;

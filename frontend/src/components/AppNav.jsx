@@ -1,8 +1,13 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "./AppNav.module.css";
 function AppNav() {
   const { isAdmin, isSuperAdmin } = useAuth();
+  const location = useLocation();
+  // Adding a city lives on its own "form" route (not under /app/cities), but
+  // it's conceptually part of the Cities section, so that tab should still
+  // read as selected while the add-city flow is open.
+  const isAddCityFlow = location.pathname.startsWith("/app/form");
 
   return (
     <nav className={styles.nav}>
@@ -11,7 +16,15 @@ function AppNav() {
           <NavLink to="countries"> Countries</NavLink>
         </li>
         <li>
-          <NavLink to="cities"> Cities</NavLink>
+          <NavLink
+            to="cities"
+            className={({ isActive }) =>
+              isActive || isAddCityFlow ? "active" : ""
+            }
+          >
+            {" "}
+            Cities
+          </NavLink>
         </li>
         {(isAdmin || isSuperAdmin) && (
           <li>
@@ -19,6 +32,10 @@ function AppNav() {
           </li>
         )}
       </ul>
+
+      <NavLink to="form" className={styles.addCity}>
+        + Add city
+      </NavLink>
     </nav>
   );
 }

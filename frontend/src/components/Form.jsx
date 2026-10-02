@@ -173,7 +173,9 @@ function Form() {
     return <Spinner />;
   if (isLoadingGeocoding) return <Spinner />;
   if (!isEditMode && !lat && !lng)
-    return <Message message="Start by clicking somewhere on the map" />;
+    return (
+      <Message message="Click a city on the map or search on the map to add a city" />
+    );
   return (
     <form
       className={`${styles.form} ${isLoading ? styles.loading : ""}`}

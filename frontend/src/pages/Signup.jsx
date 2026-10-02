@@ -156,7 +156,7 @@ export default function Signup() {
         </div>
 
         {isDuplicateEmailError && (
-          <p style={{ color: "#dc2626" }}>
+          <p style={{ color: "var(--color-danger)" }}>
             This email is already registered. Please{" "}
             <Link
               to="/login"
@@ -167,7 +167,7 @@ export default function Signup() {
             instead.
           </p>
         )}
-        {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+        {error && <p style={{ color: "var(--color-danger)" }}>{error}</p>}
 
         <div>
           <Button type="primary" disabled={status === "submitting"}>

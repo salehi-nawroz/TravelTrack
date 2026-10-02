@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Button from "./Button";
 import styles from "./ConfirmDialog.module.css";
 
 function ConfirmDialog({
@@ -47,13 +48,13 @@ function ConfirmDialog({
         <p className={styles.warning}>This action cannot be undone.</p>
 
         <div className={styles.actions}>
-          <button className={styles.cancel} onClick={onCancel}>
+          <Button type="back" onClick={onCancel}>
             Cancel
-          </button>
+          </Button>
 
-          <button className={styles.delete} onClick={onConfirm}>
+          <Button type="danger" onClick={onConfirm}>
             {confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

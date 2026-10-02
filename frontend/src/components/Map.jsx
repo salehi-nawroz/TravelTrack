@@ -39,9 +39,13 @@ function Map() {
       `${path}?${selectionMode}locationSource=mapSearch&lat=${selectedLocation.position.lat}&lng=${selectedLocation.position.lng}`,
     );
   }
+  // location.key changes on every navigation, even to an identical URL, so
+  // a repeat click on a country/city whose coordinates coincide with
+  // whatever is already applied still re-triggers the map update instead
+  // of silently no-op'ing because mapLat/mapLng didn't change value.
   useEffect(() => {
     if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
-  }, [mapLat, mapLng]);
+  }, [mapLat, mapLng, location.key]);
 
   useEffect(() => {
     if (geolocationPosition)
@@ -98,8 +102,12 @@ function Map() {
 function ChangeCenter({ position }) {
   const map = useMap();
 
+  // animate: false forces this to apply immediately and synchronously.
+  // Leaflet's default animated pan transition can be interrupted or fail
+  // to fully complete depending on timing, which caused the map to
+  // sometimes land in the wrong place.
   useLayoutEffect(() => {
-    map.setView(position);
+    map.setView(position, undefined, { animate: false });
   }, [map, position]);
 
   return null;
