@@ -4,11 +4,15 @@ import { useAuth } from "../contexts/AuthContext";
 import { getAllProfiles } from "../services/profileService";
 import { getCities, deleteCity as deleteCityApi } from "../services/cityService";
 import { getContinent } from "../utils/continent";
+import { usePagination } from "../hooks/usePagination";
 import Spinner from "../components/Spinner";
 import Message from "../components/Message";
 import ConfirmDialog from "../components/ConfirmDialog";
 import FlagBox from "../components/FlagBox";
+import Pagination from "../components/Pagination";
 import styles from "./Admin.module.css";
+
+const CITIES_PAGE_SIZE = 10;
 
 const SORT_OPTIONS = [
   { value: "default", label: "Default" },
@@ -263,8 +267,11 @@ function Admin() {
     setSortOption("default");
   }
 
-  if (!isAdmin && !isSuperAdmin) return <Navigate replace to="/app" />;
-
+  // Grouping happens on the already searched/filtered/sorted cities, before
+  // pagination - pagination then slices the resulting user groups, never the
+  // flat city array, so a user's cities/countries are never split across
+  // pages. Group order is alphabetical by user name (existing behavior,
+  // unchanged), which is what makes slicing it page-by-page deterministic.
   const citiesByUserId = processedCities.reduce((acc, city) => {
     (acc[city.userId] ??= []).push(city);
     return acc;
@@ -273,6 +280,33 @@ function Admin() {
   const userIdsWithCities = Object.keys(citiesByUserId).sort((a, b) =>
     (nameById[a] || "Unknown user").localeCompare(nameById[b] || "Unknown user"),
   );
+
+  const {
+    currentPage,
+    totalPages,
+    startIndex,
+    endIndex,
+    goToPage,
+    resetPage,
+  } = usePagination(userIdsWithCities.length, CITIES_PAGE_SIZE);
+
+  // A single effect covers every way the visible user groups can change
+  // (search, any filter, sort, or Clear resetting all of them at once)
+  // rather than wiring a resetPage() call into five separate handlers.
+  useEffect(() => {
+    resetPage();
+  }, [
+    searchQuery,
+    filterCountry,
+    filterContinent,
+    filterUserId,
+    sortOption,
+    resetPage,
+  ]);
+
+  if (!isAdmin && !isSuperAdmin) return <Navigate replace to="/app" />;
+
+  const paginatedUserIds = userIdsWithCities.slice(startIndex, endIndex);
 
   async function handleConfirmDeleteCity() {
     const city = cityPendingDelete;
@@ -456,8 +490,8 @@ function Admin() {
                 <div className={styles.toolbarResult}>
                   <span className={styles.toolbarCount}>
                     {hasActiveControls
-                      ? `${processedCities.length} of ${cities.length} cities`
-                      : `${cities.length} cities`}
+                      ? `${processedCities.length} of ${cities.length} cities · ${userIdsWithCities.length} of ${userOptions.length} users`
+                      : `${cities.length} cities · ${userOptions.length} users`}
                   </span>
 
                   {hasActiveControls && (
@@ -485,7 +519,7 @@ function Admin() {
                 </div>
               ) : (
                 <ul className={styles.userGroups}>
-                  {userIdsWithCities.map((userId) => {
+                  {paginatedUserIds.map((userId) => {
                     const userCities = citiesByUserId[userId];
                     const countries = groupByCountry(userCities);
                     const role = roleById[userId];
@@ -549,6 +583,20 @@ function Admin() {
                     );
                   })}
                 </ul>
+              )}
+
+              {totalPages > 1 && (
+                <div className={styles.paginationWrapper}>
+                  <p className={styles.pageInfo}>
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={userIdsWithCities.length}
+                    onPageChange={goToPage}
+                  />
+                </div>
               )}
             </>
           )}
